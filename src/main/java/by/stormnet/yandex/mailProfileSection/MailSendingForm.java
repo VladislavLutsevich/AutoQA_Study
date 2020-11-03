@@ -19,7 +19,7 @@ public class MailSendingForm {
     private static final By MAIL_TO_FIELD_LOCATOR = (By.cssSelector("div.MultipleAddressesDesktop.ComposeRecipients-MultipleAddressField.tst-field-to > div > div > div > div"));
     private static final By FILE_ATTACH_LOCATOR = (By.cssSelector(".ComposeAttachmentSourcesMenu-FileInput"));
     private static final By DONE_FILE_ATTACH_LOCATOR = (By.cssSelector(".ComposeAttachments-Item a[href]"));
-    private static final By MAIL_SEND_BUTTON = (By.cssSelector("div.composeReact__footer > div > div:nth-child(1) div.ComposeControlPanelButton:nth-child(1)"));
+    private static final By MAIL_SEND_BUTTON = (By.cssSelector("div.ComposeSendButton_desktop > button"));
     private static final By SUCCESS_MAIL_SENDING = (By.cssSelector(".ComposeDoneScreen-Title"));
 
     public MailSendingForm(WebDriver webDriver) {
@@ -39,11 +39,6 @@ public class MailSendingForm {
         return webDriver.findElement(MAIL_SEND_BUTTON);
     }
 
-//    public WebElement getSuccessMailSendingTitle() {
-//        new WaitManager(webDriver).waitPageElement(SUCCESS_MAIL_SENDING);
-//        return webDriver.findElement(SUCCESS_MAIL_SENDING);
-//    }
-
     public void setRecipient(String recipient) {
         getMailToField().sendKeys(recipient);
     }
@@ -55,16 +50,6 @@ public class MailSendingForm {
 
     public void sendMail() {
         getMailSendingButton().click();
-    }
-
-    public boolean isMailSend() {
-        try {
-            new WaitManager(webDriver).waitPageElement(SUCCESS_MAIL_SENDING);
-            logger.info("Mail was sent");
-            return true;
-        } catch (TimeoutException e) {
-            logger.error("Mail was not sent");
-            return false;
-        }
+        new WaitManager(webDriver).waitPageElement(SUCCESS_MAIL_SENDING);
     }
 }

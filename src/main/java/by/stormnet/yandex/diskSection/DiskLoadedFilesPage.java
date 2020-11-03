@@ -13,7 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 public class DiskLoadedFilesPage extends AbstractPage {
     private static final Logger logger = LogManager.getLogger(DiskLoadedFilesPage.class);
     private static final By LAST_ADDED_FILE_LOCATOR = (By.cssSelector("div.listing__items > div:nth-child(1)"));
-    private static final By DISK_FILES_DEFAULT_FOLDER_LOCATOR = (By.cssSelector("div.navigation__scroll > div:nth-child(1) > div:nth-child(2)"));
+    private static final By DISK_FILES_DEFAULT_FOLDER_LOCATOR = (By.cssSelector("div.navigation__scroll > div:nth-child(1) > div:nth-child(2) a"));
     private static final By MOVING_FILE_PROGRESSBAR_LOCATOR = (By.cssSelector("div.b-progressbar"));
 
     public DiskLoadedFilesPage(WebDriver webDriver) {
@@ -21,12 +21,13 @@ public class DiskLoadedFilesPage extends AbstractPage {
     }
 
     public WebElement getFilesDefaultPageLink() {
+        new WaitManager(webDriver).waitPageElement(DISK_FILES_DEFAULT_FOLDER_LOCATOR);
         return webDriver.findElement(DISK_FILES_DEFAULT_FOLDER_LOCATOR);
     }
 
     public void moveFileFromDownloadToMainFolder() {
         Actions actions = new Actions(webDriver);
-        actions.dragAndDrop(webDriver.findElement(LAST_ADDED_FILE_LOCATOR), webDriver.findElement(DISK_FILES_DEFAULT_FOLDER_LOCATOR)).perform();
+        actions.dragAndDrop(webDriver.findElement(LAST_ADDED_FILE_LOCATOR), webDriver.findElement(DISK_FILES_DEFAULT_FOLDER_LOCATOR)).build().perform();
     }
 
     public DiskFilesDefaultPage goToDiskFilesDefaultPage() {

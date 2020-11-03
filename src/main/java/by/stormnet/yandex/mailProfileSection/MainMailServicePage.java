@@ -16,6 +16,8 @@ public class MainMailServicePage extends AbstractPage {
     private static final By EMAIL_LISTING_LOCATOR = (By.cssSelector(".ns-view-messages"));
     private static final By RECEIVED_FILE_ADD_TO_DISK_LOCATOR = (By.cssSelector("span[title~=\"textfile.txt\"] > :nth-child(2)"));
     private static final By DISK_IFRAME_LOCATOR = (By.cssSelector("div._nb-popup-content iframe"));
+    private static final By REFRESH_ELEMENT_LOCATOR = (By.cssSelector("span.mail-ComposeButton-Refresh"));
+    private static final By REFRESHING_BAR = (By.cssSelector("div.js-loading-bar"));
 
     public MainMailServicePage(WebDriver webDriver) {
         super(webDriver);
@@ -34,6 +36,11 @@ public class MainMailServicePage extends AbstractPage {
     public WebElement getAddToDiskButton() {
         new WaitManager(webDriver).waitPageElement(RECEIVED_FILE_ADD_TO_DISK_LOCATOR);
         return webDriver.findElement(RECEIVED_FILE_ADD_TO_DISK_LOCATOR);
+    }
+
+    public WebElement getRefreshElement() {
+        new WaitManager(webDriver).waitPageElement(REFRESH_ELEMENT_LOCATOR);
+        return webDriver.findElement(REFRESH_ELEMENT_LOCATOR);
     }
 
     public MailSendingForm openMailSendingForm() {
@@ -62,7 +69,7 @@ public class MainMailServicePage extends AbstractPage {
     }
 
     public void refreshPage() {
-        webDriver.navigate().refresh();
-        new WaitManager(webDriver).waitPageElement(EMAIL_LISTING_LOCATOR);
+        getRefreshElement().click();
+        new WaitManager(webDriver).waitInvisibleStatePageElement(REFRESHING_BAR);
     }
 }

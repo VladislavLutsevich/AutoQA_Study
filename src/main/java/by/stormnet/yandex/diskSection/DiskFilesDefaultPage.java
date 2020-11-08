@@ -10,9 +10,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import java.io.File;
+
 public class DiskFilesDefaultPage extends AbstractPage {
     private static final Logger logger = LogManager.getLogger(DiskFilesDefaultPage.class);
-    private static final By FILE_FOR_DELETING_LOCATOR = (By.xpath("//span[contains(text(), 'textfile.txt')]/../../parent::div[contains(@class, \"js-prevent-deselect\")]"));
+    private static By FILE_FOR_DELETING_LOCATOR;
     private static final By TRASH_FOLDER_LOCATOR = (By.xpath("//span[contains(@class, 'file-icon_dir_trash') or contains(@class, 'file-icon_dir_trash-full')]/../../parent::div[contains(@class, \"js-prevent-deselect\")]"));
     private static final By DELETING_FILE_PROGRESSBAR_LOCATOR = (By.cssSelector("div.b-progressbar__fill"));
 
@@ -44,5 +46,9 @@ public class DiskFilesDefaultPage extends AbstractPage {
             logger.error("File was not deleted");
         }
         return false;
+    }
+
+    public void setFileLocator(File file){
+        FILE_FOR_DELETING_LOCATOR = (By.xpath("//span[contains(text(), '" + file.getName() + "')]/../../parent::div[contains(@class, \"js-prevent-deselect\")]"));
     }
 }

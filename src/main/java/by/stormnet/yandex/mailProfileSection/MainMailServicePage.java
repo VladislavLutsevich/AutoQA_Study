@@ -9,12 +9,13 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.io.File;
+
 public class MainMailServicePage extends AbstractPage {
     private static final Logger logger = LogManager.getLogger(MainMailServicePage.class);
     private static final By MAIL_SERVICE_PAGE_LOGO_LOCATOR = (By.cssSelector("div.yandex-header__logo"));
     private static final By MAIL_SENDING_FORM_LOCATOR = (By.cssSelector(".mail-ComposeButton-Wrap a"));
-    private static final By EMAIL_LISTING_LOCATOR = (By.cssSelector(".ns-view-messages"));
-    private static final By RECEIVED_FILE_ADD_TO_DISK_LOCATOR = (By.cssSelector("span[title~=\"textfile.txt\"] > :nth-child(2)"));
+    private static By RECEIVED_FILE_ADD_TO_DISK_LOCATOR;
     private static final By DISK_IFRAME_LOCATOR = (By.cssSelector("div._nb-popup-content iframe"));
     private static final By REFRESH_ELEMENT_LOCATOR = (By.cssSelector("span.mail-ComposeButton-Refresh"));
     private static final By REFRESHING_BAR = (By.cssSelector("div.js-loading-bar"));
@@ -71,5 +72,9 @@ public class MainMailServicePage extends AbstractPage {
     public void refreshPage() {
         getRefreshElement().click();
         new WaitManager(webDriver).waitInvisibleStatePageElement(REFRESHING_BAR);
+    }
+
+    public void setFileLocator(File file){
+        RECEIVED_FILE_ADD_TO_DISK_LOCATOR = (By.cssSelector("span[title~=\"" + file.getName() + "\"] > :nth-child(2)"));
     }
 }

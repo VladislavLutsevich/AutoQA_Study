@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import static by.stormnet.utils.PropertiesManager.getProperty;
@@ -21,7 +22,7 @@ public class EmailAndDiskFunctionalTest extends AbstractTest {
     private static final Logger logger = LogManager.getLogger(EmailAndDiskFunctionalTest.class);
 
     @Test
-    public void sendMailWithAttachedFile() {
+    public void sendMailWithAttachedFile() throws IOException {
         logger.trace("Start Test");
         SearchPage searchPage = new SearchPage(webDriver);
         LoginPage loginPage = searchPage.switchToLoginPage();
@@ -36,19 +37,23 @@ public class EmailAndDiskFunctionalTest extends AbstractTest {
         logger.debug(getProperty("recipient"));
         mailSendingForm.setRecipient(getProperty("recipient"));
         TextFileCreator textFileCreator = new TextFileCreator();
+        File file = textFileCreator.textFileCreate();
         try {
-            mailSendingForm.attachFile(textFileCreator.textFileCreate());
-        } catch (IOException | InterruptedException e) {
+            mailSendingForm.attachFile(file);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         logger.info("Try to send email");
         mailSendingForm.sendMail();
         mainMailServicePage.refreshPage();
+        mainMailServicePage.setFileLocator(file);
         mainMailServicePage.addToDiskFromLastReceivedEmail();
         YandexDiskIframe yandexDiskIframe = mainMailServicePage.switchToDiskIframe();
         DiskLoadedFilesPage diskLoadedFilesPage = yandexDiskIframe.goToDiskLoadedFilesPage();
+        diskLoadedFilesPage.setFileLocator(file);
         diskLoadedFilesPage.moveFileFromDownloadToMainFolder();
         DiskFilesDefaultPage diskFilesDefaultPage = diskLoadedFilesPage.goToDiskFilesDefaultPage();
+        diskFilesDefaultPage.setFileLocator(file);
         diskFilesDefaultPage.moveFileTrashFolder();
         logger.info("Start Check");
         Assert.assertTrue(diskFilesDefaultPage.isFileDeleted());
